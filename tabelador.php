@@ -23,7 +23,8 @@ foreach (glob("*.html") as $filename) {
 
 
 	$html_sanitized = preg_replace('/ 1 /', 									' 1(um) ', 	$html_stiped);
-	$html_sanitized = preg_replace('/[\n	]*[^º](\d(?:\.\d)*)(?! - _) -?/', 	"<br>", 	$html_sanitized);
+	$html_sanitized = preg_replace('/;/',										",",	 	$html_sanitized);
+	$html_sanitized = preg_replace('/[\n	]*[^º\d ](\d(?:\.\d)*)(?! - _) -?/',"<br>", 	$html_sanitized);
 	$html_sanitized = preg_replace('/(\b\| ?[A-ZÁÉÍÓÚÀÂÊÔÃÕÇ ]{2,}\b)/', 		'$1 |', 	$html_sanitized);
 	$html_sanitized = preg_replace('/[\n	 ]{3,}/', 							"\n", 		$html_sanitized);
 	$html_sanitized = preg_replace('/[\n ]*<br>/', 								"\n<br>", 	$html_sanitized);
@@ -35,31 +36,42 @@ foreach (glob("*.html") as $filename) {
 	foreach ($lines as $line) {
 		$items = explode(";", $line);
 
-		$items[0] = @trim(str_replace("\xc2\xa0", " ", $items[0]), " .:;,|-_");
-		$items[1] = @trim(str_replace("\xc2\xa0", " ", $items[1]), " .:;,|-_");
+		$items[0] = @trim(str_replace("\xc2\xa0", " ", $items[0]), " .:;,|-_\n");
+		$items[1] = @trim(str_replace("\xc2\xa0", " ", $items[1]), " .:;,|-_\n");
 
-		$list[$items[0]] = $items[1];
+		if ($items[0] == "DIMENSÃO E SUPORTE") {
+			$components = preg_split("/([^ .\/][A-ZÁÉÍÓÚÀÂÊÔÃÕÇ ]{2,}.?:)/", $items[1], -1, PREG_SPLIT_DELIM_CAPTURE);
+			array_shift($components);
 
+			for ($i=0; $i < (count($components)/2); $i+=2) { 
+				$list[] = array(
+					trim(str_replace("\xc2\xa0", " ", $components[$i]), " .:;,|-_"),
+					trim(str_replace("\xc2\xa0", " ", $components[($i+1)]), " .:;,|-_")
+				);
+			}
+
+			unset($items);
+			continue;
+		}
+
+		$list[] = array($items[0], $items[1]);
 		unset($items);
 	}
 
-	$components = preg_split("/([^ .\/][A-ZÁÉÍÓÚÀÂÊÔÃÕÇ ]{2,}.?:)/", $list["DIMENSÃO E SUPORTE"], -1, PREG_SPLIT_DELIM_CAPTURE);
-	array_shift($components);
+	$wanted = array(
+		"CÓDIGO DE REFERÊNCIA",
+		"INDICAÇÃO DO TÍTULO",
+		"DATA DE PRODUÇÃO",
+		"LOCAL DE PRODUÇÃO",
+		"ESPECIFICAÇÃO DE ANEXOS",
+		"INDICAÇÃO DE RESPONSABILIDADE"
+	);
 
-	for ($i=0; $i < (count($components)/2); $i+=2) { 
-		$list[trim(str_replace("\xc2\xa0", " ", $components[$i]), " .:;,|-_")] = trim(str_replace("\xc2\xa0", " ", $components[($i+1)]), " .:;,|-_");
+	foreach ($list as $key) {
+		if (in_array($key[0], $wanted)) {
+			echo('"'.$key[1].'";');
+		}
 	}
-
-	$list = array_filter($list, 'strlen');
-	unset($list["DIMENSÃO E SUPORTE"]);
-
-	echo('"'.
-		$list["CÓDIGO DE REFERÊNCIA"].
-		'";"'.
-		$list["INDICAÇÃO DO TÍTULO"].
-		'";"'.
-		$list["DATA DE PRODUÇÃO"].
-		'"');
 
 	echo "<br>";
 
