@@ -84,4 +84,4 @@ Please make sure to update tests as appropriate.
 [GNU General Public License v3.0](https://github.com/WikiMovimentoBrasil/wikimotivos/blob/master/LICENSE)
 
 ## Credits
-This application was developed by the Wiki Movimento Brasil User Group, supported by the University of São Paulo and the University of São Paulo Support Foundation. [? tem parceria com o SIAN tb?]
+This application was developed by the Wiki Movimento Brasil User Group.
