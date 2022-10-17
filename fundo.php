@@ -14,7 +14,7 @@ $login = "XXX";
 $senha = "YYY";
 $local = "http://localhost:8080/";
 $colec = $_GET["colecao"];
-$pagin = $_GET["pag"];
+$pagin = @$_GET["pag"];
 
 /* 
  * 
