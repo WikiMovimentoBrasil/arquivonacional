@@ -111,7 +111,7 @@ if ($output == FALSE) {
     //Captura arquivos para download na página atual e cria loop para exibição da lista
     preg_match_all('/download do arquivo" class="help_pesquisa" onClick="javascript:fjs_Link_download\(\'([^\']*)\',\'([^\']*)\',\'([^\']*)\'[\s\S]*?\n<input type = hidden id="in_(\d*)/', $output, $files);
     for ($i=0; $i < count($files['0']); $i++) { 
-        echo("<a href='https://sian.an.gov.br/sianex/consulta/download.asp?arquivo=".$files[1][$i]."&NomeArquivo=".$files[2][$i]."&apresentacao=".$files[3][$i]."' download='".$files[2][$i]."'>".$files[2][$i]."</a>\n<a href='dossie.php?id=".$files[4][$i]."'>".$files[4][$i]."</a>\n\n\n");
+        echo("<a href='https://sian.an.gov.br/sianex/consulta/download_novo.asp?arquivo=".$files[1][$i]."&NomeArquivo=".$files[2][$i]."&apresentacao=".$files[3][$i]."' download='".$files[2][$i]."'>".$files[2][$i]."</a>\n<a href='dossie.php?id=".$files[4][$i]."'>".$files[4][$i]."</a>\n\n\n");
     }
 
     //Fecha html
