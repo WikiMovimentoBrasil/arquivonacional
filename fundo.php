@@ -34,6 +34,8 @@ curl_setopt( $ch1, CURLOPT_RETURNTRANSFER, true );
 curl_setopt( $ch1, CURLOPT_HTTPHEADER, ['Referer' => 'https://sian.an.gov.br/sianex/consulta/resultado_pesquisa_new.asp']);
 curl_setopt( $ch1, CURLOPT_COOKIEJAR, "cookie.txt" );
 curl_setopt( $ch1, CURLOPT_COOKIEFILE, "cookie.txt" );
+curl_setopt( $ch1, CURLOPT_FOLLOWLOCATION, true);
+curl_setopt( $ch1, CURLOPT_SSL_VERIFYPEER, false);
 $output_cookie = curl_exec( $ch1 );
 curl_close( $ch1 );
 
@@ -55,6 +57,7 @@ curl_setopt( $ch2, CURLOPT_HTTPHEADER, ['Referer' => 'https://sian.an.gov.br/sia
 curl_setopt( $ch2, CURLOPT_COOKIEJAR, "cookie.txt" );
 curl_setopt( $ch2, CURLOPT_COOKIEFILE, "cookie.txt" );
 curl_setopt( $ch2, CURLOPT_FOLLOWLOCATION, true);
+curl_setopt( $ch2, CURLOPT_SSL_VERIFYPEER, false);
 $output_login = curl_exec( $ch2 );
 curl_close( $ch2 );
 
@@ -81,6 +84,7 @@ curl_setopt( $ch3, CURLOPT_POSTFIELDS, http_build_query( $params3 ) );
 curl_setopt( $ch3, CURLOPT_HTTPHEADER, ['Referer' => 'https://sian.an.gov.br/sianex/consulta/resultado_pesquisa_new.asp']);
 curl_setopt( $ch3, CURLOPT_COOKIEJAR, "cookie.txt" );
 curl_setopt( $ch3, CURLOPT_COOKIEFILE, "cookie.txt" );
+curl_setopt( $ch3, CURLOPT_SSL_VERIFYPEER, false);
 $output = curl_exec( $ch3 );
 curl_close( $ch3 );
 
@@ -110,8 +114,8 @@ if ($output == FALSE) {
   
     //Captura arquivos para download na página atual e cria loop para exibição da lista
     preg_match_all('/download do arquivo" class="help_pesquisa" onClick="javascript:fjs_Link_download\(\'([^\']*)\',\'([^\']*)\',\'([^\']*)\'[\s\S]*?\n<input type = hidden id="in_(\d*)/', $output, $files);
-    for ($i=0; $i < count($files['0']); $i++) { 
-        echo("<a href='https://sian.an.gov.br/sianex/consulta/download_novo.asp?arquivo=".$files[1][$i]."&NomeArquivo=".$files[2][$i]."&apresentacao=".$files[3][$i]."' download='".$files[2][$i]."'>".$files[2][$i]."</a>\n<a href='dossie.php?id=".$files[4][$i]."'>".$files[4][$i]."</a>\n\n\n");
+    for ($i=0; $i < count($files['0']); $i++) {
+        echo("<a href='arquivo.php?arquivo=".$files[1][$i]."&NomeArquivo=".$files[2][$i]."&apresentacao=".$files[3][$i]."' download='".$files[2][$i]."'>".$files[2][$i]."</a>\n<a href='dossie.php?id=".$files[4][$i]."'>".$files[4][$i]."</a>\n\n\n");
     }
 
     //Fecha html
