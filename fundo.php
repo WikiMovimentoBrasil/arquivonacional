@@ -113,9 +113,9 @@ if ($output == FALSE) {
     echo("<hr>");
   
     //Captura arquivos para download na página atual e cria loop para exibição da lista
-    preg_match_all('/download do arquivo" class="help_pesquisa" onClick="javascript:fjs_Link_download\(\'([^\']*)\',\'([^\']*)\',\'([^\']*)\'[\s\S]*?\n<input type = hidden id="in_(\d*)/', $output, $files);
+    preg_match_all('/Visualizar arquivo" class="help_pesquisa" onClick="javascript:fjs_Link_download\(\'([^\']*)\',\'([^\']*)\',\'([^\']*)\'\);">([^<]*)[\s\S]*?\n<input type = hidden id="in_(\d*)/', $output, $files);
     for ($i=0; $i < count($files['0']); $i++) {
-        echo("<a href='arquivo.php?arquivo=".$files[1][$i]."&NomeArquivo=".$files[2][$i]."&apresentacao=".$files[3][$i]."' download='".$files[2][$i]."'>".$files[2][$i]."</a>\n<a href='dossie.php?id=".$files[4][$i]."'>".$files[4][$i]."</a>\n\n\n");
+        echo("<a href='arquivo.php?arquivo=".$files[1][$i]."&NomeArquivo=".$files[2][$i]."&apresentacao=".$files[3][$i]."' download='".$files[4][$i]."'>".$files[4][$i]."</a>\n<a href='dossie.php?id=".$files[5][$i]."'>".$files[5][$i]."</a>\n\n\n");
     }
 
     //Fecha html
