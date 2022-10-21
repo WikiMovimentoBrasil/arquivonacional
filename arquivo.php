@@ -1,5 +1,13 @@
 <?php
 
+//Requer dados do arquivo
+if (!isset($_GET["arquivo"])) die("Forneça hash do arquivo");
+if (!isset($_GET["NomeArquivo"])) die("Forneça hash do nome do arquivo");
+if (!isset($_GET["apresentacao"])) die("Forneça número da apresentação");
+
+//Requer script para login
+require "login.php";
+
 //Busca arquivo
 $ch = curl_init( "https://sian.an.gov.br/sianex/consulta/download_novo.asp?arquivo={$_GET["arquivo"]}&NomeArquivo={$_GET["NomeArquivo"]}&apresentacao={$_GET["apresentacao"]}" );
 curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
@@ -15,6 +23,5 @@ $response = curl_exec($ch);
 $target = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
 curl_close($ch);
 
-//Redireciona para local do arquivo
 http_response_code(303);
 header("Location: ".$target);

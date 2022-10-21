@@ -1,70 +1,21 @@
-<?php
+<pre><?php
 
-/* 
- *
- * PARAMETROS PARA ATIVAÇÃO QUE DEVEM SER SUBSTITUIDOS
- * 
- * $login = E-mail cadastrado no SIAN
- * $senha = Senha cadastrada no SIAN
- * $local = Diretório onde este arquivo esteja disponível. Altere caso necessário.
- * 
- */
-
-$login = "XXX";
-$senha = "YYY";
-$local = "http://localhost:8080/";
+//Requer número da coleção
+if (!isset($_GET["colecao"])) die();
 $colec = $_GET["colecao"];
-$pagin = @$_GET["pag"];
 
-/* 
- * 
- * SCRIPT
- *
- */
+//Define número da página
+if (!isset($_GET["pag"])) {
+    $pagin = 1;
+} else {
+    $pagin = $_GET["pag"];
+}
 
+//Requer script para login
+require "login.php";
 
-//Exibir erros durante a execução
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-//Capturar cookie para login
-$ch1 = curl_init( "https://sian.an.gov.br/sianex/consulta/login-novo-com-cadastro.asp" );
-curl_setopt( $ch1, CURLOPT_RETURNTRANSFER, true );
-curl_setopt( $ch1, CURLOPT_HTTPHEADER, ['Referer' => 'https://sian.an.gov.br/sianex/consulta/resultado_pesquisa_new.asp']);
-curl_setopt( $ch1, CURLOPT_COOKIEJAR, "cookie.txt" );
-curl_setopt( $ch1, CURLOPT_COOKIEFILE, "cookie.txt" );
-curl_setopt( $ch1, CURLOPT_FOLLOWLOCATION, true);
-curl_setopt( $ch1, CURLOPT_SSL_VERIFYPEER, false);
-$output_cookie = curl_exec( $ch1 );
-curl_close( $ch1 );
-
-//Realiza login no servidor
-$params2 = [
-        "login"             => $login,
-        "senha"             => $senha,
-        "caminho"           => "",
-        "destinatario"      => "",
-        "fonecontato"       => "",
-        "assinaturacontato" => ""
-];
-$ch2 = curl_init();
-curl_setopt( $ch2, CURLOPT_URL, "https://sian.an.gov.br/sianex/consulta/Verifica_Login.asp" );
-curl_setopt( $ch2, CURLOPT_POST, true );
-curl_setopt( $ch2, CURLOPT_POSTFIELDS, http_build_query( $params2 ) );
-curl_setopt( $ch2, CURLOPT_RETURNTRANSFER, true );
-curl_setopt( $ch2, CURLOPT_HTTPHEADER, ['Referer' => 'https://sian.an.gov.br/sianex/consulta/login-novo-com-cadastro.asp']);
-curl_setopt( $ch2, CURLOPT_COOKIEJAR, "cookie.txt" );
-curl_setopt( $ch2, CURLOPT_COOKIEFILE, "cookie.txt" );
-curl_setopt( $ch2, CURLOPT_FOLLOWLOCATION, true);
-curl_setopt( $ch2, CURLOPT_SSL_VERIFYPEER, false);
-$output_login = curl_exec( $ch2 );
-curl_close( $ch2 );
-
-
-//Busca coleção
-if (!isset($pagin)) $pagin = 1;
-$params3 = [        
+//Consulta à coleção
+$params = [        
         "input_pesqfundocolecao"    => $colec,
         "data_inicio"               => "",
         "data_fim"                  => "",
@@ -77,16 +28,16 @@ $params3 = [
         "v_ordem"                   => "Relevancia",
         "pesquisa"                  => ""
 ];
-$ch3 = curl_init( "https://sian.an.gov.br/sianex/consulta/resultado_pesquisa_new.asp?v_pesquisa=&v_fundo_colecao=".$colec."&Pages=".$pagin );
-curl_setopt( $ch3, CURLOPT_RETURNTRANSFER, true );
-curl_setopt( $ch3, CURLOPT_POST, true );
-curl_setopt( $ch3, CURLOPT_POSTFIELDS, http_build_query( $params3 ) );
-curl_setopt( $ch3, CURLOPT_HTTPHEADER, ['Referer' => 'https://sian.an.gov.br/sianex/consulta/resultado_pesquisa_new.asp']);
-curl_setopt( $ch3, CURLOPT_COOKIEJAR, "cookie.txt" );
-curl_setopt( $ch3, CURLOPT_COOKIEFILE, "cookie.txt" );
-curl_setopt( $ch3, CURLOPT_SSL_VERIFYPEER, false);
-$output = curl_exec( $ch3 );
-curl_close( $ch3 );
+$ch = curl_init( "https://sian.an.gov.br/sianex/consulta/resultado_pesquisa_new.asp?v_pesquisa=&v_fundo_colecao=".$colec."&Pages=".$pagin );
+curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
+curl_setopt( $ch, CURLOPT_POST, true );
+curl_setopt( $ch, CURLOPT_POSTFIELDS, http_build_query( $params ) );
+curl_setopt( $ch, CURLOPT_HTTPHEADER, ['Referer' => 'https://sian.an.gov.br/sianex/consulta/resultado_pesquisa_new.asp']);
+curl_setopt( $ch, CURLOPT_COOKIEJAR, "cookie.txt" );
+curl_setopt( $ch, CURLOPT_COOKIEFILE, "cookie.txt" );
+curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false);
+$output = curl_exec( $ch );
+curl_close( $ch );
 
 //Verifica se a consulta deu certo. 
 //Sem sucesso, aguarda 15 segundos e atualiza página. 
