@@ -68,7 +68,7 @@ if ($output == FALSE) {
     for ($i=0; $i < count($files['0']); $i++) {
         $files[4][$i] = explode(" ", $files[4][$i]);
         if (is_array($files[4][$i])) $files[4][$i] = end($files[4][$i]);
-        echo("<a href='arquivo.php?arquivo=".$files[1][$i]."&NomeArquivo=".$files[2][$i]."&apresentacao=".$files[3][$i]."' download='".$files[4][$i]."'>".$files[4][$i]."</a>\n<a href='dossie.php?id=".$files[5][$i]."'>".$files[5][$i]."</a>\n\n\n");
+        echo("<a href='arquivo.php?arquivo=".$files[1][$i]."&NomeArquivo=".$files[2][$i]."&apresentacao=".$files[3][$i]."' download='".$files[4][$i]."'>".$files[4][$i]."</a>\n<a href='dossie.php?id=".$files[5][$i]."'>".$files[4][$i]."</a> (html)\n\n\n");
     }
 
     //Fecha html
