@@ -63,14 +63,22 @@ if ($output == FALSE) {
 
     //Linha para diferenciar seções
     echo("<hr>");
+
+    //Início da tabela
+    echo("<table border='1'>");
   
     //Captura arquivos para download na página atual e cria loop para exibição da lista
     preg_match_all('/<li><span[^>]*><a[^>]*>([^-]*) -[\s\S]*?Visualizar arquivo" class="help_pesquisa" onClick="javascript:fjs_Link_download\(\'([^\']*)\',\'([^\']*)\',\'([^\']*)\'\);">(?: ARQUIVO\.\: )?([^<]*)[\s\S]*?\n<input type = hidden id="in_(\d*)/', $output, $files);
     for ($i=0; $i < count($files['0']); $i++) {
         $files[5][$i] = explode(" ", $files[5][$i]);
         if (is_array($files[5][$i])) $files[5][$i] = end($files[5][$i]);
-        echo("<a href='arquivo.php?arquivo=".$files[2][$i]."&NomeArquivo=".$files[3][$i]."&apresentacao=".$files[4][$i]."' download='".$files[5][$i]."'>".$files[5][$i]."</a>\n<a href='dossie.php?id=".$files[6][$i]."'>".$files[1][$i]."</a> (html)\n\n\n");
+        echo("<tr><td>".$pagin."</td>
+            <td><a href='arquivo.php?arquivo=".$files[2][$i]."&NomeArquivo=".$files[3][$i]."&apresentacao=".$files[4][$i]."' download='".$files[5][$i]."'>".$files[5][$i]."</a></td>
+            <td><a href='dossie.php?id=".$files[6][$i]."'>".$files[1][$i].".html</a></td></tr>");
     }
+    
+    //Fecha tabela
+    echo("</table>");
 
     //Fecha html
     echo("</pre>");
