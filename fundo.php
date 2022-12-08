@@ -68,7 +68,7 @@ if ($output == FALSE) {
     echo("<table border='1'>");
   
     //Captura arquivos para download na página atual e cria loop para exibição da lista
-    preg_match_all('/<li><span[^>]*><a[^>]*>([^-]*) -[\s\S]*?Visualizar arquivo" class="help_pesquisa" onClick="javascript:fjs_Link_download\(\'([^\']*)\',\'([^\']*)\',\'([^\']*)\'\);">(?: ARQUIVO\.\: )?([^<]*)[\s\S]*?\n<input type = hidden id="in_(\d*)/', $output, $files);
+    preg_match_all('/<li><span[^>]*><a[^>]*>([^-]*) -[^\n]*?Visualizar arquivo" class="help_pesquisa" onClick="javascript:fjs_Link_download\(\'([^\']*)\',\'([^\']*)\',\'([^\']*)\'\);">(?: ARQUIVO\.\: )?([^<]*)[^\n]*?\n<input type = hidden id="in_(\d*)/', $output, $files);
     for ($i=0; $i < count($files['0']); $i++) {
         $files[5][$i] = explode(" ", $files[5][$i]);
         if (is_array($files[5][$i])) $files[5][$i] = end($files[5][$i]);
