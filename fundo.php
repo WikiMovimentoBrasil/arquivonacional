@@ -67,14 +67,48 @@ if ($output == FALSE) {
     //Início da tabela
     echo("<table border='1'>");
   
-    //Captura arquivos para download na página atual e cria loop para exibição da lista
-    preg_match_all('/<li><span[^>]*><a[^>]*>([^-]*) -[^\n]*?Visualizar arquivo" class="help_pesquisa" onClick="javascript:fjs_Link_download\(\'([^\']*)\',\'([^\']*)\',\'([^\']*)\'\);">(?: ARQUIVO\.\: )?([^<]*)[^\n]*?\n<input type = hidden id="in_(\d*)/', $output, $files);
-    for ($i=0; $i < count($files['0']); $i++) {
-        $files[5][$i] = explode(" ", $files[5][$i]);
-        if (is_array($files[5][$i])) $files[5][$i] = end($files[5][$i]);
-        echo("<tr><td>".$pagin."</td>
-            <td><a href='arquivo.php?arquivo=".$files[2][$i]."&NomeArquivo=".$files[3][$i]."&apresentacao=".$files[4][$i]."' download='".$files[5][$i]."'>".$files[5][$i]."</a></td>
-            <td><a href='dossie.php?id=".$files[6][$i]."'>".$files[1][$i].".html</a></td></tr>");
+    //Isola cada linha e inicia loop
+    preg_match_all('/<li><span class="titulo_conteudo">[\s\S]*?<\/li>/', $output, $files);
+    foreach ($files['0'] as $key => $file) {
+
+        //Verifica se há link para download
+        preg_match('/javascript:fjs_Link_download\(\'([^\']*)\',\'([^\']*)\'/', $file, $filecode);
+
+        //Continua para próxima linha caso linha atual não possua código para download
+        if(!isset($filecode['1'])) continue;
+
+        //Recupera nome do arquivo
+        preg_match('/BR_[\w]{2}AN[\w]{3}_[^ \.\x{005C}]*\.[\w]*/', $file, $filename);
+
+        //Recupera alias do arquivo para associar com seu dossiê
+        preg_match('/BR [\w]{2}AN[\w]{3} [^-]*/', $file, $filealias);
+
+        //Fallback caso alias não exista
+        if(!isset($filealias['0'])) {
+            $filealias['0'] = $filename['0'];
+        }
+
+        //Elimina espaços desnecessários
+        $filealias['0'] = trim($filealias['0']);
+
+        //Recupera número do dossiê
+        preg_match('/javascript:mudapagina_link\(\'in_([\d]*)/', $file, $filenumber);
+
+        echo("
+            <tr>
+                <td>".$pagin."</td>
+                <td>
+                    <a 
+                    href='arquivo.php?arquivo={$filecode['1']}&NomeArquivo={$filecode['2']}&apresentacao=1' 
+                    download='{$filename['0']}'
+                    >{$filename['0']}</a>
+                </td>
+                <td>
+                    <a href='dossie.php?id={$filenumber['1']}'>{$filealias['0']}.html</a>
+                </td>
+            </tr>
+        ");
+
     }
     
     //Fecha tabela
