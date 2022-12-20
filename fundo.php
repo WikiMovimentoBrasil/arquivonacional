@@ -83,14 +83,6 @@ if ($output == FALSE) {
         //Recupera alias do arquivo para associar com seu dossiê
         preg_match('/BR [\w]{2}AN[\w]{3} [^-]*/', $file, $filealias);
 
-        //Fallback caso alias não exista
-        if(!isset($filealias['0'])) {
-            $filealias['0'] = $filename['0'];
-        }
-
-        //Elimina espaços desnecessários
-        $filealias['0'] = trim($filealias['0']);
-
         //Recupera número do dossiê
         preg_match('/javascript:mudapagina_link\(\'in_([\d]*)/', $file, $filenumber);
 
@@ -103,9 +95,14 @@ if ($output == FALSE) {
                     download='{$filename['0']}'
                     >{$filename['0']}</a>
                 </td>
-                <td>
-                    <a href='dossie.php?id={$filenumber['1']}'>{$filealias['0']}.html</a>
-                </td>
+                <td>");
+        			if (!isset($filealias['0'])) {
+        				echo "Arquivo sem dossiê";
+        			} else {
+        				$filealias['0'] = trim($filealias['0']);
+        				echo "<a href='dossie.php?id={$filenumber['1']}'>{$filealias['0']}.html</a>";
+        			}
+                echo("</td>
             </tr>
         ");
 
